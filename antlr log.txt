@@ -1,0 +1,13 @@
+java -jar antlr4-4.5.jar -Dlanguage=CSharp grammar.g4
+
+Had to rename .compareTo() to .CompareTo() in CPP14Parser.cs
+
+
+C
+C++
+C#
+COBOL
+Javaa
+JavaScript
+Perl
+Python

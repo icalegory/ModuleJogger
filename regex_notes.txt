@@ -1,0 +1,24 @@
+
+c_cpp_function
+classRange.mainExpr
+^[\t ]*(class|struct)[\t ]+[\w]+[\s]*(final)?[\s]*(:[\s]*(public|protected|private)[\s]+[\w]+[\s]*)?\{
+className.expr
+(class|struct)[\t ]+[\w]+
+className.expr
+[\t ]+[\w]+
+className.expr
+[\w]+
+
+classrange.function.mainexpr
+^[\t ]*((static|const|virtual)[\s]+)?([\w]+([\s]+[\w]+)?([\s]+|(\*|\*\*|&)[\s]+|[\s]+(\*|\*\*|&)|[\s]+(\*|\*\*|&)[\s]+))?([\w_]+[\s]*::)?(?!(if|while|for|switch))[\w_~]+[\s]*\([^\)\(]*\)([\s]*const[\s]*)?([\s]*(final|override|final[\s]*override|override[\s]*final)[\s]*)?[\n\s]*\{
+
+function.mainexpr
+^[\t ]*((static|const|virtual)[\s]+)?[\w]+([\s]+[\w]+)?([\s]+|(\*|\*\*|&)[\s]+|[\s]+(\*|\*\*|&)|[\s]+(\*|\*\*|&)[\s]+)([\w_]+[\s]*::)?(?!(if|while|for))[\w_]+[\s]*\([^\)\(]*\)([\s]*const[\s]*)?[\n\s]*\{
+
+cs_function
+^[^\S\r\n]*(?<modifier1>(?:public|protected|internal|private)\s*)?(?<modifier2>(?:new|static|virtual|sealed|override|abstract|extern)\s*)?(partial\s*)?>(?!(return|if|else))\w+(?<genericType><[\w,\s<>]+>)?\s+)(?<name>\w+(?<genericNameType><[\w,\s<>]+>)?\s?)\((?<params>[\w\s,<>\[\]\:=\.]*)\)(?<ctorChain>\s*\:\s*(?:base|this)\s*\((?<ctorParams>[\w\s,<>\[\]\:=\.]*)\))?[\w\s<>\:,\(\)\[\]]*(?:\{|;)
+
+
+js_function
+mainExpr
+((^|[\s]+|[;\}\.])([_A-Za-z][\w_]*\.)*[_A-Za-z][\w_]*[\s]*[=:]|^|[\s;\}]+)[\s]*function([\s]+[_A-Za-z]?[\w_]*\([^\)\(]*\)|\([^\)\(]*\))[\n\s]*\{

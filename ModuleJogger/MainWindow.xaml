@@ -1,0 +1,121 @@
+﻿<Window x:Class="ModuleJogger.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ModuleJogger"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="Module Finder Window" Height="750" Width="721"
+        WindowStartupLocation="CenterScreen" Closed="Window_Closed">
+    <Window.Resources>
+        <Style TargetType="TextBlock" x:Key="FadeInStyle">
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="TextBlock.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation
+                Storyboard.TargetProperty="(TextBlock.Opacity)"
+                From="0.0" To="1.0" Duration="0:0:3"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+        <Storyboard x:Key="FadeInStoryboard" RepeatBehavior="Forever">
+            <DoubleAnimation
+            Storyboard.TargetProperty="(CheckBox.Opacity)"
+            From="0.0" To="1.0" AutoReverse="True" Duration="0:0:1"/>
+            <!-- <DoubleAnimation
+            Storyboard.TargetProperty="(CheckBox.Opacity)"
+            From="1.0" To="0.0" Duration="0:0:3"/> -->
+        </Storyboard>
+        <!-- <Style x:Key="FadeInStyle" BasedOn="{StaticResource {x:Type TextBlock}}" TargetType="TextBlock"/> -->
+    </Window.Resources>
+    <Grid>
+        <Label x:Name="label1" Content="Module Jogger&#xA;" HorizontalAlignment="Left" Margin="288,0,0,0" VerticalAlignment="Top" FontWeight="Bold" Height="42" Width="131" FontSize="16"/>
+        <ListBox x:Name="listBoxFiles" HorizontalAlignment="Left" Height="103" Margin="252,44,0,0" VerticalAlignment="Top" Width="241" SelectionMode="Extended" SelectionChanged="DeleteButtonCheck"/>
+        <Button x:Name="buttonSelectFiles" Content="Select a File or Files" HorizontalAlignment="Left" Margin="28,44,0,0" VerticalAlignment="Top" Width="197" Click="button_Click" Height="20"/>
+        <Button x:Name="buttonSelectFolder" Content="Select a Directory Tree" HorizontalAlignment="Left" Margin="28,161,0,0" VerticalAlignment="Top" Width="197" Click="buttonSelectFolder_Click" Height="20"/>
+        <TextBox x:Name="textBoxFolderName" HorizontalAlignment="Left" Height="69" Margin="252,161,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="241" TextChanged="ClearButtonCheck" Text="{Binding Source={StaticResource Settings}, Path=Default.RootFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+        <Label x:Name="label2" Content="Choose file types to parse:&#xD;&#xA;" HorizontalAlignment="Left" Margin="511,41,0,0" VerticalAlignment="Top" Height="25" Width="149"/>
+        <CheckBox x:Name="checkBoxC" Content="C, .c and .h files" HorizontalAlignment="Left" Margin="523,70,0,0" VerticalAlignment="Top" Checked="checkBox_Checked" Height="15" Width="102" IsEnabled="False"/>
+        <CheckBox x:Name="checkBoxCPP" Content="C++, .cpp and .hpp files" HorizontalAlignment="Left" Margin="523,87,0,0" VerticalAlignment="Top" Checked="checkBox_Copy_Checked" Height="15" Width="164" IsChecked="{Binding Source={StaticResource Settings}, Path=Default.IsCheckingCpp}"/>
+        <Button x:Name="button" Content="Customize C++ Extensions" HorizontalAlignment="Left" Margin="539,102,0,0" VerticalAlignment="Top" Width="148" Click="button_Click_1" Height="17" FontSize="9.333"/>
+        <CheckBox x:Name="checkBoxCS" Content="C#, .cs files" HorizontalAlignment="Left" Margin="523,120,0,0" VerticalAlignment="Top" Height="15" Width="78" IsChecked="{Binding Source={StaticResource Settings}, Path=Default.IsCheckingCSharp}"/>
+        <CheckBox x:Name="checkBoxCobol" Content="Cobol, .cob and .cbl files" HorizontalAlignment="Left" Margin="523,137,0,0" VerticalAlignment="Top" Height="15" Width="164" IsEnabled="False"/>
+        <CheckBox x:Name="checkBoxJava" Content="Java, .java files" HorizontalAlignment="Left" Margin="523,154,0,0" VerticalAlignment="Top" Height="15" Width="96" IsChecked="{Binding Source={StaticResource Settings}, Path=Default.IsCheckingJava}"/>
+        <CheckBox x:Name="checkBoxJavaScript" Content="JavaScript, .js files" HorizontalAlignment="Left" Margin="523,171,0,0" VerticalAlignment="Top" Height="15" Width="113" IsChecked="{Binding Source={StaticResource Settings}, Path=Default.IsCheckingJavaScript}"/>
+        <CheckBox x:Name="checkBoxPerl" Content="Perl, .pl files" HorizontalAlignment="Left" Margin="523,188,0,0" VerticalAlignment="Top" Height="15" Width="82" IsEnabled="False"/>
+        <CheckBox x:Name="checkBoxPython" Content="Python, .py files" HorizontalAlignment="Left" Margin="523,205,0,0" VerticalAlignment="Top" Height="15" Width="103" IsEnabled="False"/>
+        <Button x:Name="buttonGO" Content="GO" HorizontalAlignment="Left" Margin="335,288,0,0" Width="75" Click="buttonGO_Click" Height="20" VerticalAlignment="Top"/>
+        <ListBox x:Name="listBoxFunctionList" HorizontalAlignment="Left" Height="135" Margin="28,557,0,0" VerticalAlignment="Top" Width="200" IsEnabled="False"/>
+        <Label x:Name="label" Content="Current file:&#xD;&#xA;" HorizontalAlignment="Left" Margin="28,483,0,0" VerticalAlignment="Top" Height="29" Width="71"/>
+        <TextBox x:Name="textBoxCurrentFile" HorizontalAlignment="Left" Height="23" Margin="28,507,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="203" IsReadOnly="True"/>
+        <ProgressBar x:Name="progressBar" HorizontalAlignment="Left" Height="23" Margin="249,335,0,0" VerticalAlignment="Top" Width="420"/>
+        <Label x:Name="labelProgress" Content="Progress:" HorizontalAlignment="Left" Margin="104,335,0,0" VerticalAlignment="Top" RenderTransformOrigin="1.368,0.577" Width="121" HorizontalContentAlignment="Right"/>
+        <Label x:Name="label3" Content="Number of Files Total:" HorizontalAlignment="Left" Margin="28,425,0,0" VerticalAlignment="Top" Width="127"/>
+        <Label x:Name="labelNumberOfFiles" Content="0" HorizontalAlignment="Left" Margin="155,425,0,0" VerticalAlignment="Top" Width="73" HorizontalContentAlignment="Right"/>
+        <DataGrid x:Name="dataGrid" HorizontalAlignment="Stretch" Margin="252,402,41,27" VerticalAlignment="Stretch">
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="SelectAll">
+                        <MenuItem.Icon>
+                            <Image Source="pack://application:,,,/ModuleJogger;component/Resources/Images/selectall.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Command="Copy">
+                        <MenuItem.Icon>
+                            <Image Source="pack://application:,,,/ModuleJogger;component/Resources/Images/copy.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+        <!--EnableRowVirtualization="True" EnableColumnVirtualization="True"-->
+        <Label x:Name="label4" Content="—and/or—" HorizontalAlignment="Left" Margin="95,118,0,0" VerticalAlignment="Top" Width="85"/>
+        <Label x:Name="label5" Content="Method List:" HorizontalAlignment="Left" Margin="28,531,0,0" VerticalAlignment="Top" Width="132" IsEnabled="False"/>
+        <Button x:Name="buttonDelete" Content="Remove Selected from List" HorizontalAlignment="Left" Margin="28,78,0,0" VerticalAlignment="Top" Width="197" Click="buttonDelete_Click" IsEnabled="False"/>
+        <Label x:Name="label6" Content="Error Count:" HorizontalAlignment="Left" Margin="28,451,0,0" VerticalAlignment="Top" Width="105"/>
+        <Label x:Name="labelErrorCount" Content="0" HorizontalAlignment="Left" Margin="150,451,0,0" VerticalAlignment="Top" Width="78" HorizontalContentAlignment="Right" Foreground="Red"/>
+        <Label x:Name="label7" Content="Module list, which can be copied and pasted into an Excel spreadsheet:" HorizontalAlignment="Left" Margin="252,372,0,0" VerticalAlignment="Top" Width="420" Height="25"/>
+        <Button x:Name="buttonClear" Content="Clear" HorizontalAlignment="Left" Margin="28,195,0,0" VerticalAlignment="Top" Width="197" IsEnabled="False" Click="buttonClear_Click"/>
+        <Label x:Name="labelCurrentFile" Content="Current File Number:" HorizontalAlignment="Left" Margin="28,399,0,0" VerticalAlignment="Top" Width="122"/>
+        <Label x:Name="labelCurrentFileCount" Content="0" HorizontalAlignment="Left" Margin="155,399,0,0" VerticalAlignment="Top" Width="73" HorizontalContentAlignment="Right"/>
+        <ComboBox x:Name="comboBoxNestedFolders" HorizontalAlignment="Left" Margin="252,241,0,0" VerticalAlignment="Top" Width="77" SelectedIndex="0" HorizontalContentAlignment="Center">
+            <sys:Int32>0</sys:Int32>
+            <sys:Int32>1</sys:Int32>
+            <sys:Int32>2</sys:Int32>
+            <sys:Int32>3</sys:Int32>
+            <sys:Int32>4</sys:Int32>
+            <sys:Int32>5</sys:Int32>
+            <sys:Int32>6</sys:Int32>
+            <sys:Int32>7</sys:Int32>
+            <sys:Int32>8</sys:Int32>
+            <sys:Int32>9</sys:Int32>
+            <sys:Int32>10</sys:Int32>
+            <sys:Int32>11</sys:Int32>
+            <sys:Int32>12</sys:Int32>
+            <sys:Int32>13</sys:Int32>
+            <sys:Int32>14</sys:Int32>
+            <sys:Int32>15</sys:Int32>
+        </ComboBox>
+        <TextBlock x:Name="textBlockNested" Style="{StaticResource FadeInStyle}" TextAlignment="Right" HorizontalAlignment="Left" Margin="28,241,0,0" VerticalAlignment="Top" Width="197" Height="44">
+            <Run Text="Number of nested folder levels to"/>
+            <LineBreak/>
+            <Run Text="use for sub-grouping:"/>
+        </TextBlock>
+        <TextBlock x:Name="textBlockNestedDescription"  Style="{StaticResource FadeInStyle}" TextAlignment="Left" HorizontalAlignment="Left" Margin="346,241,0,0" VerticalAlignment="Top" Width="290" Height="42">
+            <Run Text="A setting of one or higher will cause an additional"/>
+            <LineBreak/>
+            <Run Text="column to be created below for the sub-grouping."/>
+        </TextBlock>
+        <TextBlock x:Name="textBlockProgramVersion" TextAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Top" Width="202" Height="36" Padding="0,0,10,0">
+            <Run Text="64 bit"/><LineBreak/>
+            <Run Text="Version 1.03"/>
+        </TextBlock>
+        <Button x:Name="buttonReset" Content="Reset Settings to Default" HorizontalAlignment="Left" Margin="523,288,0,0" VerticalAlignment="Top" Width="146" Height="20" Click="buttonReset_Click"/>
+        <Image x:Name="image" HorizontalAlignment="Left" Height="34" Margin="413,5,0,0" VerticalAlignment="Top" Width="100" Source="Resources/Images/joggers.png" OpacityMask="#FF04005B"/>
+        <TextBlock x:Name="textBlockDesc" Text="Supports long paths of &gt;32K characters" Foreground="Blue" HorizontalAlignment="Left" Margin="28,9,0,0" VerticalAlignment="Top" Height="25" Width="230" FontStyle="Italic" Background="Transparent"/>
+    </Grid>
+</Window>
