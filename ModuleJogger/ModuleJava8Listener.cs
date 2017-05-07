@@ -192,8 +192,13 @@ namespace ModuleJogger
             {
                 _className = _classHierarchyStack.Pop();
                 if (_className == "$ANON")
-                    // pop off the containing method name of the anonymous class
-                    _className = _classHierarchyStack.Pop();
+                    if (_classHierarchyStack.Count > 0)
+                    {
+                        // pop off the containing method name of the anonymous class
+                        string classPopped = _classHierarchyStack.Pop();
+                        if (classPopped != null)
+                            _className = classPopped;
+                    }
             }
         }
 
@@ -360,7 +365,8 @@ namespace ModuleJogger
 
             // More comprehensive checks probably ought to be done, to account for interfaces
             // that appear after a class or classes in a file.
-            if (_className.Length > 0)
+            //if (_className?.Length > 0)
+            //if (!string.IsNullOrEmpty(_className))
                 _window.AddModule(_nestedPath, _path, _fileName, ClassHierarchy() + _signature);
                 //_window.AddModule(_nestedPath, _path, _fileName, ClassHierarchyMinusInnermost() + _signature);
 
@@ -508,7 +514,8 @@ namespace ModuleJogger
             // See the Java8.g4 grammar for methodBody.
             // This same method is not necessary for constructors.  Modules are generated
             // for constructors as they are encountered (see above, EnterConstructorDeclarator()).
-            if (!context.GetText().StartsWith(";") && _className.Length > 0)
+            //if (!context.GetText().StartsWith(";") && !string.IsNullOrEmpty(_className))
+            if (!context.GetText().StartsWith(";"))
                 _window.AddModule(_nestedPath, _path, _fileName, ClassHierarchy() + _signature);
         }
 
@@ -525,7 +532,8 @@ namespace ModuleJogger
         /// </summary>
         /// <returns>String with a delimited (by ".") list of containing classes.</returns>
         private string ClassHierarchy()
-        {   if (_classHierarchyStack.Count > 0)
+        {
+            if (_classHierarchyStack.Count > 0)
             {
                 StringBuilder classList = new StringBuilder();
                 //string last = _classHierarchyStack.Peek();
